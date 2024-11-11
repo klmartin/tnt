@@ -12,9 +12,7 @@ class HomeController extends Controller
         \Log::info('index route accessed');
 
         $categories = Category::all();
-        // $shops = Shop::with(['categories', 'days'])
-        //     ->searchResults()
-        //     ->paginate(9);
+
         $shops = Shop::Paginate(9);
         $mapShops = $shops->makeHidden(['active', 'created_at', 'updated_at', 'deleted_at', 'created_by_id', 'photos', 'media']);
         $latitude = $shops->count() && (request()->filled('category') || request()->filled('search')) ? $shops->average('latitude') : -3.169487134716415;

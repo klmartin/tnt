@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\ShopsController;
+use App\Http\Controllers\BookingController;
 
 
 // Home route
@@ -30,7 +31,8 @@ Route::put('/attractions/update/{shop}', 'AttractionsController@update')->name('
 Route::get('/attractions/{shop}', 'AttractionsController@showcase')->name('attraction');
 
 Route::get('/cong', 'AttractionsController@cong')->name('cong');
-Route::get('/bookings', 'AttractionsController@booking')->name('booking');
+Route::get('/bookings', 'BookingController@booking')->name('booking');
+Route::post('/submit-booking', [BookingController::class, 'store'])->name('bookings.store');
 
 Route::get('/admin/shops','AdminController@index')->name('admin.shops.index');
 

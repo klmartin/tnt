@@ -63,7 +63,7 @@ class AttractionsController extends Controller
         return redirect()->back()->with('success', 'Attraction created successfull');
     }
 
-    
+
 
     public function edit(Shop $shop)
     {
@@ -91,17 +91,13 @@ class AttractionsController extends Controller
 
     public function update(UpdateShopRequest $request, Shop $shop)
     {
-        // Debugging the request
-        // dd($request->all());
 
-        // Ensure 'active' field is set to 0 if not present in the request
         if (!$request->has('active')) {
             $request->merge([
                 'active' => 0
             ]);
         }
 
-        // Update the shop with the request data
         $shop->update($request->all());
 
         // Sync the categories
@@ -156,9 +152,7 @@ class AttractionsController extends Controller
         return view('cong.index');
     }
 
-    public function booking(){
-        return view('booking.index');
-    }
+
 
     public function showcase(Shop $shop)
     {

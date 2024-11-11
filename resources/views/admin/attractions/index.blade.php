@@ -16,7 +16,7 @@
         </a>
     </li><!-- End Dashboard Nav -->
 
-  
+
 
     <li class="nav-item">
         <a class="nav-link " href="{{ url('/attractions') }}">
@@ -40,7 +40,7 @@
         </a>
     </li>End F.A.Q Page Nav -->
 
-    
+
 
 
     <li class="nav-heading">Settings</li>
@@ -51,7 +51,7 @@
         </a>
     </li><!-- End Register Page Nav -->
 
- 
+
 
 
     </ul>
@@ -82,9 +82,9 @@
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
-              
 
-                
+
+
                     <div style="margin-bottom: 10px;" class="row">
                         <div class="col-lg-12">
                             <a class="btn btn-success" href="{{ url("/attractions/create") }}">
@@ -92,7 +92,7 @@
                             </a>
                         </div>
                     </div>
-               
+
 
                 <div class="card">
                     <div class="card-body">
@@ -102,7 +102,7 @@
                                 <thead>
                                     <tr>
                                         <th width="10">#</th>
-                                        
+
                                         <th>{{ trans('cruds.shop.fields.name') }}</th>
                                         <th>{{ trans('cruds.shop.fields.photos') }}</th>
                                         <th>{{ trans('cruds.shop.fields.address') }}</th>
@@ -114,35 +114,52 @@
                                     @foreach($shops as $key => $shop)
                                     <tr>
                                         <td>ATTR{{ $key + 1 }}2024</td>
-                                       
+
                                         <td>{{ $shop->name ?? '' }}</td>
                                         <td>
                                             @foreach($shop->photos as $photo)
-                                            <a href="{{ $photo->getUrl() }}" target="_blank">
-                                                <img src="{{ $photo->getUrl('thumb') }}" width="50px" height="50px">
-                                            </a>
+                                                @php
+                                                    // Retrieve base URL from .env using config helper
+                                                    $baseUrl = config('app.url');
+
+                                                    // Get the relative URLs and replace `storage/` with `storage/app/public/`
+                                                    $photoUrl = Str::replaceFirst('storage/', 'storage/app/public/', $photo->getUrl());
+                                                    $thumbUrl = Str::replaceFirst('storage/', 'storage/app/public/', $photo->getUrl('thumb'));
+
+                                                    // Append base URL if not already present
+                                                    if (!Str::startsWith($photoUrl, $baseUrl)) {
+                                                        $photoUrl = $baseUrl . '/' . ltrim($photoUrl, '/');
+                                                    }
+                                                    if (!Str::startsWith($thumbUrl, $baseUrl)) {
+                                                        $thumbUrl = $baseUrl . '/' . ltrim($thumbUrl, '/');
+                                                    }
+                                                @endphp
+                                                <a href="{{ $photoUrl }}" target="_blank">
+                                                    <img src="{{ $thumbUrl }}" width="50px" height="50px">
+                                                </a>
                                             @endforeach
                                         </td>
+
                                         <td>{{ $shop->address ?? '' }}</td>
                                         <td>
                                             <input type="checkbox" disabled="disabled" {{ $shop->active ? 'checked' : '' }}>
                                         </td>
                                         <td>
-                                           
+
                                             <a class="btn btn-xs btn-primary" href="{{ url('attractions', $shop->id) }}">
                                                 {{ trans('global.view') }}
                                             </a>
-                                           
+
                                             <a class="btn btn-xs btn-info" href="{{ route('attractions.edit', $shop->id) }}">
                                                 {{ trans('global.edit') }}
                                             </a>
-                                           
+
                                             <form action="{{ route('attractions.destroy', $shop->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                                 @method('DELETE')
                                                 @csrf
                                                 <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
                                             </form>
-                                          
+
                                         </td>
                                     </tr>
                                     @endforeach

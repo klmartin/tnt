@@ -1,181 +1,294 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="content-box content-single">
-                <article class="post-180 gd_place type-gd_place status-publish hentry gd_placecategory-hotels">
-                    <header>
-                        <h1 class="entry-title">{{ $shop->name }}</h1></header>
-                    <div class="entry-content entry-summary">
-                        @if($shop->photos->count())
-                        <div class="geodir-post-slider center-gallery">
-                            <div class="bxslider">
-                                @foreach($shop->photos as $photo)
-                                    @php
-                                        // Insert 'app/public/' after 'storage/' in the photo URL
-                                        $photoUrl = Str::replaceFirst('storage/', 'storage/app/public/', $photo->url);
-                                    @endphp
-                                    <div><img src="{{ $photoUrl }}"></div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-                        @if($shop->categories->count())
-                            <div class="geodir-single-taxonomies-container">
-                                <p class="geodir_post_taxomomies clearfix">
-                                    <span class="geodir-category">
-                                        Categories:
-                                        @foreach($shop->categories as $category)
-                                            <a href="{{ route('home') }}?category={{ $category->id }}">{{ $category->name }}</a>{{ !$loop->last ? ',' : ''  }}
-                                        @endforeach
-                                    </span>
-                                </p>
-                            </div>
-                        @endif
-                        <div class="geodir-single-tabs-container">
-                            <div class="geodir-tabs" id="gd-tabs">
-                                <dl class="geodir-tab-head"><dt></dt>
-                                    <dd class="geodir-tab-active"><a data-tab="#post_content" data-status="enable"><i class="fas fa-home" aria-hidden="true"></i>About</a></dd><dt></dt>
-                                    @if($shop->photos->count())
-                                        <dd class=""><a data-tab="#post_images" data-status="enable"><i class="fas fa-image" aria-hidden="true"></i>Photos</a></dd><dt></dt>
-                                    @endif
-                                    @if($shop->latitude && $shop->longitude)
-                                        <dd class=""><a data-tab="#post_map" data-status="enable"><i class="fas fa-globe-americas" aria-hidden="true"></i>Map</a></dd><dt></dt>
-                                    @endif
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@elseif(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content-box content-single">
+                    <article class="post-180 gd_place type-gd_place status-publish hentry gd_placecategory-hotels">
+                        <header style="display: flex; justify-content: space-between; align-items: center;">
+                            <h1 class="entry-title">{{ $shop->name }} </h1>
+                            @if(Auth::check())<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                Book Trip
+                            </button>@endif
+                        </header>
 
-                                </dl>
-                                <ul class="geodir-tabs-content geodir-entry-content " style="z-index: 0; position: relative;">
-                                    <li id="post_contentTab" style="display: none;"><span id="post_content"></span>
-                                        <div id="geodir-tab-content-post_content" class="hash-offset"></div>
-                                        <div class="geodir-post-meta-container">
-                                            <div class="geodir_post_meta  geodir-field-post_content">
-                                                <p>Address: {{ $shop->address }}</p>
-                                                <p>Description: {{ $shop->description }}</p>
-                                                @if($shop->days->count())
-                                                    @if($shop->working_hours->currentOpenRange(now()))
-                                                        <p>Shop is open and will close at {{ $shop->working_hours->currentOpenRange(now())->end() }}.</p>
-                                                    @else
-                                                        <p>Shop is closed since {{ $shop->working_hours->previousClose(now())->format('l H:i') }}
-                                                            and will re-open at {{ $shop->working_hours->nextOpen(now())->format('l H:i') }}</p>
+                        <div class="entry-content entry-summary">
+                            @if ($shop->photos->count())
+                                <div class="geodir-post-slider center-gallery">
+                                    <div class="bxslider">
+                                        @foreach ($shop->photos as $photo)
+                                            @php
+                                                // Insert 'app/public/' after 'storage/' in the photo URL
+                                                $photoUrl = Str::replaceFirst(
+                                                    'storage/',
+                                                    'storage/app/public/',
+                                                    $photo->url,
+                                                );
+                                            @endphp
+                                            <div><img src="{{ $photoUrl }}"></div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                            @if ($shop->categories->count())
+                                <div class="geodir-single-taxonomies-container">
+                                    <p class="geodir_post_taxomomies clearfix">
+                                        <span class="geodir-category">
+                                            Categories:
+                                            @foreach ($shop->categories as $category)
+                                                <a
+                                                    href="{{ route('home') }}?category={{ $category->id }}">{{ $category->name }}</a>{{ !$loop->last ? ',' : '' }}
+                                            @endforeach
+                                        </span>
+                                    </p>
+                                </div>
+                            @endif
+                            <div class="geodir-single-tabs-container">
+                                <div class="geodir-tabs" id="gd-tabs">
+                                    <dl class="geodir-tab-head">
+                                        <dt></dt>
+                                        <dd class="geodir-tab-active"><a data-tab="#post_content" data-status="enable"><i
+                                                    class="fas fa-home" aria-hidden="true"></i>About</a></dd>
+                                        <dt></dt>
+                                        @if ($shop->photos->count())
+                                            <dd class=""><a data-tab="#post_images" data-status="enable"><i
+                                                        class="fas fa-image" aria-hidden="true"></i>Photos</a></dd>
+                                            <dt></dt>
+                                        @endif
+                                        @if ($shop->latitude && $shop->longitude)
+                                            <dd class=""><a data-tab="#post_map" data-status="enable"><i
+                                                        class="fas fa-globe-americas" aria-hidden="true"></i>Map</a></dd>
+                                            <dt></dt>
+                                        @endif
+
+                                    </dl>
+                                    <ul class="geodir-tabs-content geodir-entry-content "
+                                        style="z-index: 0; position: relative;">
+                                        <li id="post_contentTab" style="display: none;"><span id="post_content"></span>
+                                            <div id="geodir-tab-content-post_content" class="hash-offset"></div>
+                                            <div class="geodir-post-meta-container">
+                                                <div class="geodir_post_meta  geodir-field-post_content">
+                                                    <p>Address: {{ $shop->address }}</p>
+                                                    <p>Description: {{ $shop->description }}</p>
+                                                    @if ($shop->days->count())
+                                                        @if ($shop->working_hours->currentOpenRange(now()))
+                                                            <p>Shop is open and will close at
+                                                                {{ $shop->working_hours->currentOpenRange(now())->end() }}.
+                                                            </p>
+                                                        @else
+                                                            <p>Shop is closed since
+                                                                {{ $shop->working_hours->previousClose(now())->format('l H:i') }}
+                                                                and will re-open at
+                                                                {{ $shop->working_hours->nextOpen(now())->format('l H:i') }}
+                                                            </p>
+                                                        @endif
                                                     @endif
-                                                @endif
-                                                <p></p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    @if($shop->photos->count())
-                                    <li id="post_imagesTab" style="display: none;">
-                                        <span id="post_images"></span>
-                                        <div id="geodir-tab-content-post_images" class="hash-offset"></div>
-                                        <div class="geodir-post-slider">
-                                            <div class="geodir-image-container geodir-image-sizes-medium_large ">
-                                                <div id="geodir_images_5de6cafacbba5_180" class="geodir-image-wrapper" data-controlnav="1" data-slideshow="1">
-                                                    <ul class="geodir-gallery geodir-images clearfix">
-                                                        @foreach($shop->photos as $photo)
-                                                            @php
-                                                                // Adjust URLs to include 'app/public/' if needed
-                                                                $photoUrl = Str::replaceFirst('storage/', 'storage/app/public/', $photo->getUrl());
-                                                                $thumbUrl = Str::replaceFirst('storage/', 'storage/app/public/', $photo->getUrl('thumb'));
-                                                            @endphp
-                                                            <li>
-                                                                <a href="{{ $photoUrl }}" class="geodir-lightbox-image" target="_blank">
-                                                                    <img src="{{ $thumbUrl }}" width="1440" height="960">
-                                                                    <i class="fas fa-search-plus" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
+                                                    <p></p>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </li>
-                                @endif
+                                        </li>
+                                        @if ($shop->photos->count())
+                                            <li id="post_imagesTab" style="display: none;">
+                                                <span id="post_images"></span>
+                                                <div id="geodir-tab-content-post_images" class="hash-offset"></div>
+                                                <div class="geodir-post-slider">
+                                                    <div class="geodir-image-container geodir-image-sizes-medium_large ">
+                                                        <div id="geodir_images_5de6cafacbba5_180"
+                                                            class="geodir-image-wrapper" data-controlnav="1"
+                                                            data-slideshow="1">
+                                                            <ul class="geodir-gallery geodir-images clearfix">
+                                                                @foreach ($shop->photos as $photo)
+                                                                    @php
+                                                                        // Adjust URLs to include 'app/public/' if needed
+                                                                        $photoUrl = Str::replaceFirst(
+                                                                            'storage/',
+                                                                            'storage/app/public/',
+                                                                            $photo->getUrl(),
+                                                                        );
+                                                                        $thumbUrl = Str::replaceFirst(
+                                                                            'storage/',
+                                                                            'storage/app/public/',
+                                                                            $photo->getUrl('thumb'),
+                                                                        );
+                                                                    @endphp
+                                                                    <li>
+                                                                        <a href="{{ $photoUrl }}"
+                                                                            class="geodir-lightbox-image" target="_blank">
+                                                                            <img src="{{ $thumbUrl }}" width="1440"
+                                                                                height="960">
+                                                                            <i class="fas fa-search-plus"
+                                                                                aria-hidden="true"></i>
+                                                                        </a>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        @endif
 
-                                    @if($shop->latitude && $shop->longitude)
-                                        <li id="post_mapTab" style="display: none;">
-                                            <div id="map-canvas" style="height: 425px; width: 100%; position: relative; overflow: hidden;">
-                                            </div>
-                                        </li>
-                                    @endif
-                                    @if($shop->days->count())
-                                        <li id="working_hoursTab" style="display: none;">
-                                            @foreach($shop->days as $day)
-                                                <p>{{ ucfirst($day->name) }}: from {{ $day->pivot->from_hours }}:{{ $day->pivot->from_minutes }} to {{ $day->pivot->to_hours }}:{{ $day->pivot->to_minutes }}</p>
-                                            @endforeach
-                                        </li>
-                                    @endif
-                                </ul>
+                                        @if ($shop->latitude && $shop->longitude)
+                                            <li id="post_mapTab" style="display: none;">
+                                                <div id="map-canvas"
+                                                    style="height: 425px; width: 100%; position: relative; overflow: hidden;">
+                                                </div>
+                                            </li>
+                                        @endif
+                                        @if ($shop->days->count())
+                                            <li id="working_hoursTab" style="display: none;">
+                                                @foreach ($shop->days as $day)
+                                                    <p>{{ ucfirst($day->name) }}: from
+                                                        {{ $day->pivot->from_hours }}:{{ $day->pivot->from_minutes }} to
+                                                        {{ $day->pivot->to_hours }}:{{ $day->pivot->to_minutes }}</p>
+                                                @endforeach
+                                            </li>
+                                        @endif
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                        <div class="geodir-single-taxonomies-container">
-                            <div class="geodir-pos_navigation clearfix">
-                                <div class="geodir-post_left">
-                                    <a href="{{ url()->previous() }}" rel="prev">Back</a>
+                            <div class="geodir-single-taxonomies-container">
+                                <div class="geodir-pos_navigation clearfix">
+                                    <div class="geodir-post_left">
+                                        <a href="{{ url()->previous() }}" rel="prev">Back</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <footer class="entry-footer"></footer>
-                </article>
+                        <footer class="entry-footer"></footer>
+                    </article>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm" action="{{ route('bookings.store') }}" method="post">
+                        <!-- CSRF Token for Laravel -->
+                        @csrf
+                        <input type="hidden" name="site_id" value="{{ $shop->id }}">
+                        @if(Auth::check())
+                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">@endif
+                        <!-- Phone Number -->
+                        <div class="mb-3">
+                            <label for="userPhone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="userPhone" name="user_phone" required
+                                placeholder="Enter your phone number">
+                        </div>
+
+
+                        <!-- Travel Date and Return Date -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="travelDate" class="form-label">Travel Date</label>
+                                <input type="date" class="form-control" id="travelDate" name="travel_date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="returnDate" class="form-label">Return Date</label>
+                                <input type="date" class="form-control" id="returnDate" name="return_date">
+                            </div>
+                        </div>
+
+                        <!-- Additional Notes -->
+                        <div class="mb-3">
+                            <label for="visitors" class="form-label">No of Visitors</label>
+                            <input class="form-control" id="visitors" name="visitors" type="number" max="15">
+                            </inp>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary">Book Now</button>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
-<style>
-@media only screen and (min-width: 675px) {
-    .center-gallery {
-        width: 50%;
-        margin: auto;
-    }
-}
-</style>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+    <style>
+        @media only screen and (min-width: 675px) {
+            .center-gallery {
+                width: 50%;
+                margin: auto;
+            }
+        }
+    </style>
 @endsection
 
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
-<script type="text/javascript">
-if (window.location.hash && window.location.hash.indexOf('&') === -1 && jQuery(window.location.hash + 'Tab').length) {
-    hashVal = window.location.hash;
-} else {
-    hashVal = jQuery('dl.geodir-tab-head dd.geodir-tab-active').find('a').attr('data-tab');
-}
-openTab(hashVal);
-
-jQuery('dl.geodir-tab-head dd a').click(function() {
-    openTab(jQuery(this).data('tab'))
-});
-
-function openTab(hashVal)
-{
-    jQuery('dl.geodir-tab-head dd').each(function() {
-        var tab = '';
-        tab = jQuery(this).find('a').attr('data-tab');
-        jQuery(this).removeClass('geodir-tab-active');
-        if (hashVal != tab) {
-            jQuery(tab + 'Tab').hide();
+    <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+    <script type="text/javascript">
+        if (window.location.hash && window.location.hash.indexOf('&') === -1 && jQuery(window.location.hash + 'Tab')
+            .length) {
+            hashVal = window.location.hash;
+        } else {
+            hashVal = jQuery('dl.geodir-tab-head dd.geodir-tab-active').find('a').attr('data-tab');
         }
-    });
-    jQuery('a[data-tab="'+hashVal+'"]').parent().addClass('geodir-tab-active');
-    jQuery(hashVal + 'Tab').show();
-}
+        openTab(hashVal);
 
-$(function(){
-    $('.bxslider').bxSlider({
-        mode: 'fade',
-        slideWidth: 600
-    });
-});
-</script>
-@if($shop->latitude && $shop->longitude)
-    <script type='text/javascript' src='https://maps.google.com/maps/api/js?language=en&key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&region=GB'></script>
-    <script defer>
-       function initialize() {
+        jQuery('dl.geodir-tab-head dd a').click(function() {
+            openTab(jQuery(this).data('tab'))
+        });
+
+        function openTab(hashVal) {
+            jQuery('dl.geodir-tab-head dd').each(function() {
+                var tab = '';
+                tab = jQuery(this).find('a').attr('data-tab');
+                jQuery(this).removeClass('geodir-tab-active');
+                if (hashVal != tab) {
+                    jQuery(tab + 'Tab').hide();
+                }
+            });
+            jQuery('a[data-tab="' + hashVal + '"]').parent().addClass('geodir-tab-active');
+            jQuery(hashVal + 'Tab').show();
+        }
+
+        $(function() {
+            $('.bxslider').bxSlider({
+                mode: 'fade',
+                slideWidth: 600
+            });
+        });
+    </script>
+    @if ($shop->latitude && $shop->longitude)
+        <script type='text/javascript'
+            src='https://maps.google.com/maps/api/js?language=en&key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&region=GB'>
+        </script>
+        <script defer>
+            function initialize() {
                 var latLng = new google.maps.LatLng({{ $shop->latitude }}, {{ $shop->longitude }});
                 var mapOptions = {
                     zoom: 14,
@@ -195,7 +308,8 @@ $(function(){
                     rotateControl: false
                 };
                 var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-                var image = new google.maps.MarkerImage("{{ asset('assets/images/pin.png') }}", null, null, null, new google.maps.Size(40, 52));
+                var image = new google.maps.MarkerImage("{{ asset('assets/images/pin.png') }}", null, null, null, new google
+                    .maps.Size(40, 52));
 
                 // Update the thumbnail URL if it contains 'localhost'
                 var thumbnailUrl = "{{ $shop->thumbnail }}";
@@ -251,15 +365,15 @@ $(function(){
                     title: '{{ $shop->name }}'
                 });
                 var infowindow = new google.maps.InfoWindow();
-                google.maps.event.addListener(marker, 'click', (function (marker) {
-                    return function () {
+                google.maps.event.addListener(marker, 'click', (function(marker) {
+                    return function() {
                         infowindow.setContent(content);
                         infowindow.open(map, marker);
                     }
                 })(marker));
             }
 
-        google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
-@endif
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+    @endif
 @endsection

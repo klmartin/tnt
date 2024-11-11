@@ -13,18 +13,16 @@ class CreateBookingsTable extends Migration
      */
     public function up()
     {
+
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->integer('site_id');
-            $table->string('site_name')->nullable();
-            $table->integer('price')->nullable();
-            $table->integer('booked_by');
-            $table->date('depature_date')->nullable();
-            $table->time('depature_time')->nullable();
-            $table->integer('status')->nullable();
-            $table->integer('phone')->nullable();
-            $table->integer('station')->nullable();
-            $table->integer('spervisor');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('user_phone', 20);
+            $table->date('travel_date');
+            $table->date('return_date')->nullable();
+            $table->integer('visitors')->default(1);
+            $table->text('additional_notes')->nullable();
             $table->timestamps();
         });
     }
@@ -39,3 +37,6 @@ class CreateBookingsTable extends Migration
         Schema::dropIfExists('bookings');
     }
 }
+
+
+

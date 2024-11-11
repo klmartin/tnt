@@ -21,7 +21,7 @@
       </nav>
     </div><!-- End Page Title -->
 
-   
+
 
     @if($roleId == 1)
 
@@ -36,7 +36,7 @@
             <div class="col-xxl-6 col-md-6">
               <div class="card info-card sales-card">
 
-                
+
 
                 <div class="card-body">
                   <h5 class="card-title">Bookings <span>| Today</span></h5>
@@ -46,8 +46,8 @@
                       <i class="bi bi-cart"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>1</h6>
-                      <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+                      <h6>{{ $totalBookings }}</h6>
+
 
                     </div>
                   </div>
@@ -56,37 +56,13 @@
               </div>
             </div><!-- End Sales Card -->
 
-            <!-- Revenue Card -->
-            <!-- <div class="col-xxl-4 col-md-6">
-              <div class="card info-card revenue-card">
-
-                
-
-                <div class="card-body">
-                  <h5 class="card-title">Revenue <span>| This Month</span></h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-currency-dollar"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>$3,264</h6>
-                      <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div> -->
-            <!-- End Revenue Card -->
 
             <!-- Customers Card -->
             <div class="col-xxl-6 col-xl-12">
 
               <div class="card info-card customers-card">
 
-                
+
 
                 <div class="card-body">
                   <h5 class="card-title">Customers <span>| This Year</span></h5>
@@ -96,8 +72,7 @@
                       <i class="bi bi-people"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>3</h6>
-                      <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
+                      <h6>{{ $customersTotal }}</h6>
 
                     </div>
                   </div>
@@ -133,15 +108,9 @@
                   <script>
                     document.addEventListener("DOMContentLoaded", () => {
                       new ApexCharts(document.querySelector("#reportsChart"), {
-                        series: [{
-                          name: 'Sales',
-                          data: [31, 40, 28, 51, 42, 82, 56],
-                        }, {
-                          name: 'Revenue',
-                          data: [11, 32, 45, 32, 34, 52, 41]
-                        }, {
+                        series: [ {
                           name: 'Customers',
-                          data: [15, 11, 32, 18, 9, 24, 11]
+                          data: [4, 2, 8, 6, 9, 3, 1]
                         }],
                         chart: {
                           height: 350,
@@ -172,7 +141,7 @@
                         },
                         xaxis: {
                           type: 'datetime',
-                          categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+                          categories: ["2024-11-09", "2024-11-10", "2024-11-11", "2024-11-12", "2024-11-13", "2024-11-14", "2024-11-15"]
                         },
                         tooltip: {
                           x: {
@@ -189,15 +158,15 @@
               </div>
             </div><!-- End Reports -->
 
-          
 
-         
+
+
 
           </div>
         </div><!-- End Left side columns -->
 
         <!-- Right side columns -->
-       
+
         <!-- End Right side columns -->
 
       </div>
@@ -215,7 +184,7 @@
             <div class="col-xxl-6 col-md-6">
               <div class="card info-card sales-card">
 
-                
+
 
                 <div class="card-body">
                   <h5 class="card-title">Geosites <span>Total</span></h5>
@@ -225,8 +194,7 @@
                       <i class="ri-archive-fill"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>6</h6>
-                      <span class="text-success small pt-1 fw-bold">90%</span> <span class="text-muted small pt-2 ps-1">Thanks you</span>
+                      <h6>{{ $shopsTotal }}</h6>
 
                     </div>
                   </div>
@@ -239,7 +207,7 @@
             <!-- <div class="col-xxl-4 col-md-6">
               <div class="card info-card revenue-card">
 
-                
+
 
                 <div class="card-body">
                   <h5 class="card-title">Transactions <span>| General</span></h5>
@@ -273,8 +241,7 @@
                       <i class="ri-24-hours-fill"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>1</h6>
-                      <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">Please Complete</span>
+                      <h6>{{ $myBookings }}</h6>
 
                     </div>
                   </div>
@@ -284,7 +251,7 @@
 
             </div><!-- End Customers Card -->
 
-            
+
 
             <!-- Google maps -->
             <div class="col-12">
@@ -304,15 +271,15 @@
                 <div class="card-body">
                   <a href=""><h5 class="card-title">Geotourism Attractions <span>| Click to book</span></h5></a>
 
-                  <div id="map-canvas" style="width: 100%; height: 400px;"></div> 
-  
+                  <div id="map-canvas" style="width: 100%; height: 400px;"></div>
+
                 </div>
                 </div>
 
               </div>
             </div><!-- End maps -->
 
-         
+
 
           </div>
         </div><!-- End Left side columns -->
@@ -391,7 +358,7 @@
 
           </div><!-- End Recent Activity -->
 
-    
+
 
 
 
@@ -430,15 +397,13 @@
     };
 
     var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-    var image = new google.maps.MarkerImage("assets/images/pin.png", null, null, null, new google.maps.Size(40, 52));
     var places = @json($mapShops);
-
+    console.log(places)
     for (var i = 0; i < places.length; i++) {
       var place = places[i];
       if (place.latitude && place.longitude) {
         var marker = new google.maps.Marker({
           position: new google.maps.LatLng(place.latitude, place.longitude),
-          icon: image,
           map: map,
           title: place.name
         });

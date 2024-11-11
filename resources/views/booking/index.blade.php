@@ -13,7 +13,7 @@
 
 <div class="pagetitle">
   <h1> Total Bookings</h1>
-  
+
 </div><!-- End Page Title -->
 
 <section class="section">
@@ -24,41 +24,41 @@
         <div class="card-body">
           <h5 class="card-title">Bookings</h5>
 
-          <!-- Table with stripped rows -->
-          <table class="table datatable">
-            <thead>
-              <tr>
-                <th>
-                  <b>Ge</b>osite name
-                </th>
-                <th>Contact</th>
-                @if($roleId == 1)
-                <th>Customer</th>
-                @endif
-                <th>Location</th>
-             
-                <th data-type="date" data-format="YYYY/DD/MM">Depature Date</th>
-                
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Sanje Waterfalls: A Hidden Gem in Udzungwa Mountains National Park</td>
-                <td>+255 653 495 586</td>
+       <!-- Table with stripped rows -->
+<table class="table datatable">
+    <thead>
+      <tr>
+        <th><b>Ge</b>osite name</th>
+        <th>Contact</th>
+        @if($roleId == 1)
+        <th>Customer</th>
+        @endif
+        <th data-type="date" data-format="YYYY/DD/MM">Departure Date</th>
+        <th data-type="date" data-format="YYYY/DD/MM">Arrival Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach($booking as $bookingItem)
+        <tr>
+          <td>{{ $bookingItem->shop->name ?? 'N/A' }}</td> <!-- Geosite Name -->
+          <td>{{ $bookingItem->user_phone ?? 'N/A' }}</td> <!-- Contact Number -->
+          @if($roleId == 1)
+          <td>{{ $bookingItem->user->name ?? 'N/A' }}</td> <!-- Customer Name -->
+          @endif
+          <td>{{ $bookingItem->travel_date ?? 'N/A' }}</td> <!-- Departure Date -->
+          <td>{{ $bookingItem->return_date ?? 'N/A' }}</td>
+          <td>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bookingModal">
+            View Booking
+          </button>
+          </td>
 
-                @if($roleId == 1)
-                <td>Philbert Malulu</td>
-                @endif
-
-                <td>Morogoro, Udzungwa</td>
-               
-                <td>2024/07/11</td>
-            
-              </tr>
-             
-            </tbody>
-          </table>
-          <!-- End Table with stripped rows -->
+        </tr>
+      @endforeach
+    </tbody>
+  </table>
+  <!-- End Table with stripped rows -->
 
         </div>
       </div>

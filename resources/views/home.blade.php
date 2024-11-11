@@ -154,27 +154,22 @@ use Illuminate\Support\Str;
             <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up"
                 data-aos-delay="200">
                 <div class="row gy-4">
-
                     <div class="col-md-6">
                         <input type="text" name="name" class="form-control" placeholder="Your Name"
                             required="">
                     </div>
-
                     <div class="col-md-6 ">
                         <input type="email" class="form-control" name="email" placeholder="Your Email"
                             required="">
                     </div>
-
                     <div class="col-md-12">
                         <input type="text" class="form-control" name="subject" placeholder="Subject"
                             required="">
                     </div>
-
                     <div class="col-md-12">
                         <textarea class="form-control" name="message" rows="6" placeholder="Message"
                             required=""></textarea>
                     </div>
-
                     <div class="col-md-12 text-center">
                         <div class="loading">Loading</div>
                         <div class="error-message"></div>
@@ -182,7 +177,6 @@ use Illuminate\Support\Str;
 
                         <button type="submit">Send Message</button>
                     </div>
-
                 </div>
             </form>
         </div><!-- End Contact Form -->
@@ -197,9 +191,8 @@ use Illuminate\Support\Str;
 @endsection
 
 @section('scripts')
-{{-- <script type='text/javascript' src='https://maps.google.com/maps/api/js?language=en&key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&region=GB'></script> --}}
-<script src="https://cdn.jsdelivr.net/gh/somanchiu/Keyless-Google-Maps-API@v6.8/mapsJavaScriptAPI.js"
-async defer></script>
+<script type='text/javascript' src='https://maps.google.com/maps/api/js?language=en&key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&region=GB'></script>
+
 <script defer>
 	function initialize() {
 		var mapOptions = {
@@ -224,17 +217,16 @@ async defer></script>
 			rotateControl: false
 	  	}
 		var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-        var image = new google.maps.MarkerImage("assets/images/pin.png", null, null, null, new google.maps.Size(40,52));
         var places = @json($mapShops);
 
         for(place in places)
         {
             place = places[place];
+            console.log(place);
             if(place.latitude && place.longitude)
             {
                 var marker = new google.maps.Marker({
                     position: new google.maps.LatLng(place.latitude, place.longitude),
-                    icon: image,
                     map: map,
                     title: place.name
                 });

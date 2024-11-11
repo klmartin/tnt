@@ -14,7 +14,7 @@
                 <li><a href="{{ route('register') }}">Register</a></li>
                 <li><a href="{{ route('login') }}">Login</a></li>
                 @else
-                <li><a href="{{ route('admin.shops.index') }}">Manage Attractions</a></li>
+                <li><a href="{{ route('attractions') }}">Manage Attractions</a></li>
                 <li><a href="#contact" onclick="event.preventDefault(); document.getElementById('logoutform').submit();">Logout</a></li>
                 <form id="logoutform" action="{{ route('logout') }}" method="POST" style="display: none;">
                     {{ csrf_field() }}
