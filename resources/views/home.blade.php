@@ -197,7 +197,9 @@ use Illuminate\Support\Str;
 @endsection
 
 @section('scripts')
-<script type='text/javascript' src='https://maps.google.com/maps/api/js?language=en&key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&region=GB'></script>
+{{-- <script type='text/javascript' src='https://maps.google.com/maps/api/js?language=en&key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&region=GB'></script> --}}
+<script src="https://cdn.jsdelivr.net/gh/somanchiu/Keyless-Google-Maps-API@v6.8/mapsJavaScriptAPI.js"
+async defer></script>
 <script defer>
 	function initialize() {
 		var mapOptions = {
